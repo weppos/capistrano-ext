@@ -1,4 +1,4 @@
-== unreleased
+== 1.2.1 (June 14, 2008)
 
 * Exclude multistage:prepare from the multistage:ensure check [Matt Sanders]
 * Don't clobber pre-existing stage definitions on
