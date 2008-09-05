@@ -57,8 +57,8 @@ module MonitorServers
 
   # Monitor the load of the servers tied to the current task.
   def load(options={})
-    servers = current_task.servers.sort
-    names = servers.map { |s| s.match(/^([^.]+)/)[1] }
+    servers = find_servers_for_task(current_task).sort
+    names = servers.map { |s| s.host.match(/^([^.]+)/)[1] }
     time = date_column(:init)
     load_column_width = "0.00".length * 3 + 2
 
@@ -88,7 +88,7 @@ module MonitorServers
       header.call if time[:rows] % 40 == 0
 
       print(date_column(:show, time), "  ")
-      servers.each { |server| print(uptimes[server].join("/"), "  ") }
+      servers.each { |server| print(uptimes[server.host].join("/"), "  ") }
       puts
 
       # sleep this way, so that CTRL-C works immediately
@@ -108,7 +108,7 @@ module MonitorServers
 
     # set up the date column formatter, and get the list of servers
     time = date_column(:init)
-    servers = current_task.servers.sort
+    servers = find_servers_for_task(current_task).sort
 
     # initialize various helper variables we'll be using
     mutex = Mutex.new
@@ -156,7 +156,7 @@ module MonitorServers
     # compute the stuff we need to know for displaying the header
     num_len = (num_format % 1).length
     column_width = num_len * (servers.length + 1) + servers.length
-    abbvs = servers.map { |server| server.match(/^(\w+)/)[1][0,num_len] }
+    abbvs = servers.map { |server| server.host.match(/^(\w+)/)[1][0,num_len] }
     col_header = abbvs.map { |v| "%-*s" % [num_len, v] }.join("/")
 
     # write both rows of the header
