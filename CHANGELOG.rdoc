@@ -1,8 +1,8 @@
 == (unreleased)
 
 * Fixed load and requests_per_second to work with cap2 [Gufo Pelato]
-
 * Allow tasks in staging files to be invoked without explicitly specifying the stage [Michael Hale]
+* Added ability to invoke web:disable/enable on a stage basis when using Multistage extension. [Simone Carletti] 
 
 
 == 1.2.1 (June 14, 2008)
