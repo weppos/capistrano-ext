@@ -81,6 +81,12 @@ Capistrano::Configuration.instance.load do
           $ cap deploy:web:disable \\
                 REASON="hardware upgrade" \\
                 UNTIL="12pm Central Time"
+        
+        The maintenance page is based on the default Capistrano maintenance \
+        template called maintenance.rhtml and available in the templates \
+        folder. You can provide a custom template either changing \
+        the template directory via :template_dir variable or specifying \
+        a custom template name with :maintenance_file.
 
         Further customization will require that you write your own task.
       DESC
@@ -91,7 +97,7 @@ Capistrano::Configuration.instance.load do
         reason = ENV['REASON']
         deadline = ENV['UNTIL']
 
-        template = File.read(File.join(fetch(:template_dir, File.dirname(__FILE__) + '/templates'), "maintenance.rhtml"))
+        template = File.read(File.join(fetch(:template_dir, File.dirname(__FILE__) + '/templates'), fetch(:maintenance_file, "maintenance.rhtml")))
         result = ERB.new(template).result(binding)
 
         put result, "#{shared_path}/system/maintenance_#{stage}.html", :mode => 0644
